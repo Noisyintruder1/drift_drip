@@ -1,0 +1,92 @@
+.App {
+  text-align: center;
+  background-color: rgb(203, 162, 162);
+}
+
+.App-header {
+  background-color:gray;
+  min-height: 20vh;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: start;
+  font-size: calc(10px + 2vmin);
+  color: rgb(48, 216, 228);
+  border-radius: 5vh;
+  text-align: center;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.Trip{
+  align-items: start;
+margin-left: 10px;
+margin-right: 150px;
+margin-top: 5px;
+margin-bottom: 5px;
+width: 30vh;
+border-radius: 40px;
+
+}
+.Drip{
+  border-radius: 20px;
+}
+.text{
+  
+  color: beige;
+  font-size: 45px;
+  font-weight: bolder;
+  font-style: italic;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+
+
+}
+.brick{
+  width: 30vh;
+}
+.jordan{
+  width: 28vh;
+}
+.venom{
+  width: 44vh;
+  transform: transform 0.3s ease filter 0.3s ease;
+  transform:  scale(1.05);
+  filter: brightness(1.1);
+  height: auto;
+}
+.logo{
+  width:60px;
+  height: 60px;
+  border-radius: 50px;
+}
+.test{
+  color: beige;
+  font-size: xx-large;
+  font-weight: bolder;
+  font-style: italic;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.xo{
+  color: rgb(139, 203, 135);
+  font-size: 45px;
+  font-weight: bolder;
+  font-style: italic;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+.prev{
+  align-items: start;
+}
+.next{
+  align-items: end;
+}
