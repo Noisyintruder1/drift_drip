@@ -52,10 +52,19 @@ border-radius: 40px;
 
 }
 .brick{
-  width: 30vh;
+  color: rgb(255, 255, 128);
+  font-size: 45px;
+  font-weight: bolder;
+  font-style: italic;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+
 }
 .jordan{
-  width: 28vh;
+  color: rgb(133, 253, 163);
+  font-size: 45px;
+  font-weight: bolder;
+  font-style: italic;
+  font-family: Georgia, 'Times New Roman', Times, serif;
 }
 .venom{
   width: 44vh;
@@ -63,6 +72,7 @@ border-radius: 40px;
   transform:  scale(1.05);
   filter: brightness(1.1);
   height: auto;
+  margin-bottom: 5px;
 }
 .logo{
   width:60px;
@@ -89,4 +99,52 @@ border-radius: 40px;
 }
 .next{
   align-items: end;
+}
+.Elvis{
+  .hover-image{
+    width: 300px;
+    height: auto;
+    transition: transform 0.3s ease;
+  }
+  .hover-image:hover{
+    transform: scale(1.1);
+  }
+}
+.map{
+  color: rgb(24, 223, 206);
+}
+.pay{
+  font-size: 45px;
+  color: rgba(44, 175, 5, 0.808);
+  font-style: italic;
+}
+.money{
+  width: 60px;
+  height: 50px;
+  background-color: black;
+  font-family: 'Times New Roman', Times, serif;
+}
+.XOXO{
+  font-size: 20px;
+  color: #007ca1;
+  font-style: italic;
+}
+.here{
+  font-size: 35px;
+  color: rgb(230, 122, 21);
+}
+.maps{
+  color: rgb(210, 233, 9);
+}
+.total{
+color: rgb(8, 172, 131);
+font-style: italic;
+}
+.order{
+  color: #ac25eb;
+  font-style: italic;
+  font-family: 'Times New Roman', Times, serif;
+}
+.cost{
+  color: rgb(48, 255, 255);
 }

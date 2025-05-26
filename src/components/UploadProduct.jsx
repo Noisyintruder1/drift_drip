@@ -40,9 +40,9 @@ const UploadProduct = () => {
   return (
     <div>
      <div className="row justify-content-center mt-4">
-      <div className="col-md-6 card shadow p-5">
+      <div className="col-md-6 card shadow p-5 bg-secondary">
         <form onSubmit={submit} className='p-3'>
-          <h2><i>Upload products </i></h2>
+          <h2><i>Upload products 📤</i></h2>
 
             {loading}
             {success}

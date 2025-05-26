@@ -1,0 +1,97 @@
+/* SimpleNavbar.css */
+
+.navbar-gradient {
+    background: linear-gradient(to right, #1e3c72, #2a5298);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 0 0 12px 12px;
+    margin: 0 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: sticky; 
+    top: 0;           
+    z-index: 1000;   
+    width: 100%;   
+  }
+  
+  .navbar-brand {
+    font-size: 1.8rem;
+    margin-right: 2rem;
+  }
+  
+  .nav-link {
+    position: relative;
+    transition: color 0.3s ease;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  .nav-link:hover {
+    color: #e70a0a !important;
+  }
+  
+  .nav-underline {
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #03adad;
+    transition: width 0.3s ease;
+  }
+  
+  .nav-link:hover .nav-underline {
+    width: 100%;
+  }
+  
+  .navbar-toggler {
+    border: none;
+  }
+  
+  .navbar-toggler:focus {
+    box-shadow: none;
+  }
+  
+  .auth-buttons .btn {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Adjust spacing on mobile */
+  @media (max-width: 991.98px) {
+    .auth-buttons {
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .navbar-gradient {
+      border-radius: 0 0 8px 8px;
+      margin: 0 5px;
+    }
+  }
+  
+  /* Responsive brand size */
+  @media (max-width: 576px) {
+    .navbar-brand {
+      font-size: 1.5rem;
+    }
+  }
+
+  /* Add to the existing Navbar.css */
+.nav-link .badge {
+  font-size: 0.6rem;
+  padding: 0.25rem 0.4rem;
+}
+
+.peg{
+  width: 30px;
+  height: 30px;
+}
+.you{
+  color: rgb(2, 174, 197);
+  size: 120px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-style: italic;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
