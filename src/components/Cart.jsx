@@ -9,26 +9,54 @@ const Cart = () => {
   const img_url = "https://Noisyintruder2.pythonanywhere.com/static/images/";
   const navigate = useNavigate();
 
+  // Generate shoe sizes from 32 to 46
+  const shoeSizes = Array.from({ length: 15 }, (_, i) => i + 32);
+
   useEffect(() => {
     const loadCart = () => {
       const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-      setCartItems(storedCart);
+      // Initialize quantity and size if not present
+      const cartWithDefaults = storedCart.map(item => ({
+        ...item,
+        quantity: item.quantity || 1,
+        size: item.size || 38 // Default size if not specified
+      }));
+      setCartItems(cartWithDefaults);
       setIsLoading(false);
     };
     loadCart();
     
-    // Listen for cart updates from other components
     window.addEventListener("cartUpdated", loadCart);
     return () => window.removeEventListener("cartUpdated", loadCart);
   }, []);
 
   useEffect(() => {
     const total = cartItems.reduce(
-      (sum, item) => sum + Number(item.product_cost),
+      (sum, item) => sum + (Number(item.product_cost) * (item.quantity || 1)),
       0
     );
     setTotalCost(total);
   }, [cartItems]);
+
+  const updateQuantity = (index, newQuantity) => {
+    if (newQuantity < 1) return;
+    
+    const updatedCart = [...cartItems];
+    updatedCart[index].quantity = newQuantity;
+    
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    setCartItems(updatedCart);
+    window.dispatchEvent(new Event("cartUpdated"));
+  };
+
+  const updateSize = (index, newSize) => {
+    const updatedCart = [...cartItems];
+    updatedCart[index].size = newSize;
+    
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    setCartItems(updatedCart);
+    window.dispatchEvent(new Event("cartUpdated"));
+  };
 
   const clearCart = () => {
     if (window.confirm("Are you sure you want to clear your cart?")) {
@@ -112,8 +140,41 @@ const Cart = () => {
                   <div className="card-body d-flex flex-column">
                     <h5 className="card-title">{item.product_name}</h5>
                     <p className="text-warning fw-bold mb-3">
-                      {Number(item.product_cost).toFixed(2)} Ksh
+                      {Number(item.product_cost * (item.quantity || 1)).toFixed(2)} Ksh
                     </p>
+                    
+                    {/* Size Selector */}
+                    <div className="mb-3">
+                      <label htmlFor={`size-${index}`} className="form-label">Size:</label>
+                      <select 
+                        id={`size-${index}`}
+                        className="form-select bg-secondary text-light border-dark"
+                        value={item.size || 38}
+                        onChange={(e) => updateSize(index, parseInt(e.target.value))}
+                      >
+                        {shoeSizes.map(size => (
+                          <option key={size} value={size}>{size}</option>
+                        ))}
+                      </select>
+                    </div>
+                    
+                    {/* Quantity Selector */}
+                    <div className="d-flex justify-content-center mb-3">
+                      <button 
+                        className="btn btn-outline-secondary"
+                        onClick={() => updateQuantity(index, (item.quantity || 1) - 1)}
+                      >
+                        -
+                      </button>
+                      <span className="mx-3">{item.quantity || 1}</span>
+                      <button 
+                        className="btn btn-outline-secondary"
+                        onClick={() => updateQuantity(index, (item.quantity || 1) + 1)}
+                      >
+                        +
+                      </button>
+                    </div>
+                    
                     <button
                       className="btn btn-outline-danger mt-auto"
                       onClick={() => removeItem(index)}
@@ -132,7 +193,7 @@ const Cart = () => {
                 <h5 className="text-light mb-4">Order Summary</h5>
                 
                 <div className="d-flex justify-content-between mb-3">
-                  <span className="text-light">Subtotal ({cartItems.length} items)</span>
+                  <span className="text-light">Subtotal ({cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0)} items)</span>
                   <span className="text-light">{totalCost.toFixed(2)} Ksh</span>
                 </div>
                 

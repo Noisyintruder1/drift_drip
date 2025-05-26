@@ -1,10 +1,10 @@
 .App {
   text-align: center;
-  background-color: rgb(203, 162, 162);
+  background: linear-gradient(to right, #000000c7, #719181,#000000);
 }
 
 .App-header {
-  background-color:gray;
+  background: linear-gradient(to right, #ec5e5ec7, #24664571,#0332686b);
   min-height: 20vh;
   display: flex;
   flex-direction: column;
@@ -147,4 +147,10 @@ font-style: italic;
 }
 .cost{
   color: rgb(48, 255, 255);
+}
+.center{
+  background: linear-gradient(to right, #000000c7, #ecb3b3,#000000)
+}
+.Edit{
+  background: linear-gradient(to right, #000000c7, #ecb3b3,#000000)
 }

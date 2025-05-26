@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.js";
@@ -8,14 +8,18 @@ import { Card } from "react-bootstrap";
 import { useAuth } from "./contexts/AuthContext";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { CartContext } from './contexts/CartContext';
 
-const GetProducts = ({ addToCart }) => {
+const GetProducts = () => {
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const [quantities, setQuantities] = useState({});
+  const [selectedSizes, setSelectedSizes] = useState({});
+  const { addToCart } = useContext(CartContext);
 
   const img_url = "https://Noisyintruder2.pythonanywhere.com/static/images/";
 
@@ -26,6 +30,16 @@ const GetProducts = ({ addToCart }) => {
         "https://Noisyintruder2.pythonanywhere.com/api/get_products"
       );
       setProducts(response.data);
+      // Initialize quantities and sizes
+      const initialQuantities = {};
+      const initialSizes = {};
+      response.data.forEach(product => {
+        initialQuantities[product.product_id] = 1;
+        // Default to size 38 if it's a shoe product
+        initialSizes[product.product_id] = product.category === 'shoes' ? 38 : null;
+      });
+      setQuantities(initialQuantities);
+      setSelectedSizes(initialSizes);
     } catch (error) {
       console.error("Error fetching products:", error);
       setError(error.message);
@@ -37,6 +51,13 @@ const GetProducts = ({ addToCart }) => {
   useEffect(() => {
     getProducts();
   }, []);
+
+  const handleSizeChange = (productId, size) => {
+    setSelectedSizes(prev => ({
+      ...prev,
+      [productId]: size
+    }));
+  };
 
   const handleAddToCart = (product) => {
     if (!isAuthenticated) {
@@ -51,16 +72,21 @@ const GetProducts = ({ addToCart }) => {
       return;
     }
 
+    const quantity = quantities[product.product_id] || 1;
+    const size = selectedSizes[product.product_id];
+
     const cartItem = {
       product_id: product.product_id,
       product_name: product.product_name,
       product_description: product.product_description,
       product_cost: product.product_cost,
       product_photo: product.product_photo,
+      quantity: quantity,
+      ...(product.category === 'shoes' && { size: size }) // Only include size if it's a shoe
     };
 
     addToCart(cartItem);
-    toast.success(`${product.product_name} added to cart!`);
+    toast.success(`${product.product_name} (${quantity}x${size ? `, size ${size}` : ''}) added to cart!`);
   };
 
   const handlePurchase = (product) => {
@@ -69,7 +95,8 @@ const GetProducts = ({ addToCart }) => {
       navigate('/Login');
       return;
     }
-    navigate("/MakePayments", { state: { product } });
+    const size = selectedSizes[product.product_id];
+    navigate("/MakePayments", { state: { product, size } });
   };
 
   const filteredProducts = products.filter((product) =>
@@ -123,7 +150,7 @@ const GetProducts = ({ addToCart }) => {
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
           {filteredProducts.map((product) => (
             <div className="col" key={product.product_id}>
-              <Card className="h-100 shadow-sm" style={{ backgroundColor: '#1e1e1e', color: '#ffffff', borderColor: '#333' }}>
+              <Card className="h-100 shadow-sm" style={{ backgroundColor: '#1e1e1e', color: '#ffffff', borderColor: '#333'}}>
                 <div className="text-center p-3">
                   <Card.Img
                     variant="top"
@@ -146,6 +173,22 @@ const GetProducts = ({ addToCart }) => {
                     <h5 className="text-warning mb-3">
                       Ksh {parseFloat(product.product_cost).toFixed(2)}
                     </h5>
+                    
+                    {product.category === 'shoes' && (
+                      <div className="col-md-4 ">
+                        <label className="form-label text-light justify-content-center"><i>Size</i></label>
+                        <select 
+                          className="form-select bg-outline-primary text-dark"
+                          value={selectedSizes[product.product_id] || 38}
+                          onChange={(e) => handleSizeChange(product.product_id, parseInt(e.target.value))}
+                        >
+                          {Array.from({length: 15}, (_, i) => i + 32).map(size => (
+                            <option key={size} value={size}>{size}</option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+                    
                     <section className="row">
                       <div className="col-md-6">
                         <button

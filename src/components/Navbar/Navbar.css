@@ -1,7 +1,7 @@
 /* SimpleNavbar.css */
 
 .navbar-gradient {
-    background: linear-gradient(to right, #1e3c72, #2a5298);
+    background: linear-gradient(to right, #61ebbd, #0d6d68,#db9209);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     border-radius: 0 0 12px 12px;
     margin: 0 10px;
@@ -34,7 +34,7 @@
     left: 0;
     width: 0;
     height: 2px;
-    background-color: #03adad;
+    background-color: #cf04cf;
     transition: width 0.3s ease;
   }
   

@@ -161,7 +161,7 @@ const Home = () => {
             </div>
          </section>
 
-    <div className="row bg-secondary">
+    <div className="center">
     <div className="col md-4 text-center">
         <h4>About Us</h4>
         <p>Drift,Trip and Drip is a shoe store that sells high end shoes of all sizes that are legit and approved by stoke x </p>
