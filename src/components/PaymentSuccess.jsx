@@ -64,7 +64,7 @@ const PaymentSuccess = () => {
               <div className="d-grid gap-2">
                 <button 
                   className="btn btn-success"
-                  onClick={() => navigate('/')}
+                  onClick={() => navigate('/Makepayments')}
                 >
                   <i className="bi bi-house-door me-2"></i>Back to Home
                 </button>

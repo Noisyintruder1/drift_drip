@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.js";
@@ -8,7 +8,7 @@ import { Card } from "react-bootstrap";
 import { useAuth } from "./contexts/AuthContext";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { CartContext } from './contexts/CartContext';
+import { useCart } from './contexts/CartContext';
 
 const GetProducts = () => {
   const [products, setProducts] = useState([]);
@@ -19,7 +19,7 @@ const GetProducts = () => {
   const navigate = useNavigate();
   const [quantities, setQuantities] = useState({});
   const [selectedSizes, setSelectedSizes] = useState({});
-  const { addToCart } = useContext(CartContext);
+  const { addToCart } = useCart();
 
   const img_url = "https://Noisyintruder2.pythonanywhere.com/static/images/";
 

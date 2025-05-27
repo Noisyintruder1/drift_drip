@@ -15,6 +15,7 @@ import { CartProvider } from './components/contexts/CartContext';
 import CartCheckout from './components/cartCheckout';
 import { AuthProvider } from './components/contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import ChatComponent from './components/bot/ChatComponent';
 
 
 
@@ -47,8 +48,8 @@ function App() {
   };
 
   return (
-    <AuthProvider>
-      <CartProvider>
+    <CartProvider>
+      <AuthProvider>
         <Router>
           <div className="App">
             <header className="App-header">
@@ -64,6 +65,7 @@ function App() {
               <Route path='/Signup' element={<Signup />} />
               <Route path='/Login' element={<Login />} />
               <Route path='/UploadProduct' element={<UploadProduct />} />
+              <Route path='/ChatComponent' element={<ChatComponent/>}/>
               <Route 
                 path='/Getproducts' 
                 element={<GetProducts addToCart={addToCart} />} 
@@ -101,8 +103,8 @@ function App() {
             <hr />
           </div>
         </Router>
-      </CartProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </CartProvider>
   );
 }
 

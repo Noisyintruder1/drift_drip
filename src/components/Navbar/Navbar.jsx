@@ -1,15 +1,15 @@
 import { Link } from 'react-router-dom';
-import { useEffect, useContext } from 'react';
+import { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import '../../App.css';
 import './Navbar.css';
 import { useAuth } from '../contexts/AuthContext';
-import { CartContext } from '../contexts/CartContext';
+import { useCart } from '../contexts/CartContext';
 
 const Navbar = () => {
   const { isAuthenticated, logout } = useAuth();
-  const { cartItemCount } = useContext(CartContext);
+  const { cartItemCount } = useCart();
 
   useEffect(() => {
     const navbarToggler = document.querySelector('.navbar-toggler');
@@ -62,6 +62,13 @@ const Navbar = () => {
             <li className="nav-item px-2">
               <Link to="/Getproducts" className="nav-link">
                 Products
+                <div className="nav-underline"></div>
+              </Link>
+            </li>
+            
+            <li className="nav-item px-2">
+              <Link to="/ChatComponent" className="nav-link">
+                Talk
                 <div className="nav-underline"></div>
               </Link>
             </li>

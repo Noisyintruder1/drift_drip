@@ -6,7 +6,7 @@ import "bootstrap/dist/js/bootstrap.js";
 
 const MakePayments = () => {
   const location = useLocation();
-  const { product } = location.state || {};
+  const { product, cartItems, totalCost } = location.state || {};
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
@@ -14,12 +14,12 @@ const MakePayments = () => {
   const img_url = 'https://Noisyintruder2.pythonanywhere.com/static/images/';
 
   useEffect(() => {
-    if (!product) {
-      navigate('/');
+    if (!product && !cartItems) {
+      navigate('/PaymentSuccess');
     } else {
       setLoading(false);
     }
-  }, [product, navigate]);
+  }, [product, cartItems, navigate]);
 
   if (loading) return <div className="text-center mt-5">Loading...</div>;
 
@@ -30,15 +30,36 @@ const MakePayments = () => {
     try {
       const data = new FormData();
       data.append("phone", phone);
-      data.append("amount", product.product_cost);
+      data.append("amount", product ? product.product_cost : totalCost);
       
       const response = await axios.post(
         'https://Noisyintruder2.pythonanywhere.com/api/mpesa_payment', 
         data
       );
+      
       setMessage(response.data.message);
+      
+      // Navigate to PaymentSuccess after successful payment initiation
+      navigate('/PaymentSuccess', {
+        state: {
+          paymentDetails: {
+            transactionId: response.data.transaction_id || 'N/A',
+            phoneNumber: phone
+          },
+          cartItems: cartItems || [product], // Pass either cart items or single product
+          totalAmount: product ? product.product_cost : totalCost
+        }
+      });
+      
+      // Clear cart if this was a cart checkout
+      if (cartItems) {
+        localStorage.removeItem('cart');
+        window.dispatchEvent(new Event('cartUpdated'));
+      }
+      
     } catch (error) {
       setMessage("Payment failed. Please try again.");
+      console.error("Payment error:", error);
     }
   }
 
@@ -54,11 +75,23 @@ const MakePayments = () => {
 
           <div className="row align-items-center">
             <div className="col-md-6 text-center">
-              <img 
-                src={img_url + product.product_photo}
-                alt="Product" 
-                style={{ maxHeight: '300px', objectFit: 'contain' }}
-              />
+              {product ? (
+                <img 
+                  src={img_url + product.product_photo}
+                  alt="Product" 
+                  style={{ maxHeight: '300px', objectFit: 'contain' }}
+                />
+              ) : (
+                <div className="text-light">
+                  <h4>Order Summary</h4>
+                  {cartItems?.map((item, index) => (
+                    <div key={index} className="mb-2">
+                      <p>{item.product_name} (x{item.quantity})</p>
+                    </div>
+                  ))}
+                  <p className="fw-bold">Total: KSh {totalCost}</p>
+                </div>
+              )}
             </div>
 
             <div className="col-md-6">
