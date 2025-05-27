@@ -8,7 +8,40 @@ CORS(app)  # Enable CORS for all routes
 # Chatbot response pairs
 pairs = [
     (r"hi|hello|hey", ["Hello! How can I assist you today?", "Hi there! How can I help?"]),
-    # ... (keep your existing pairs)
+    
+    # Existing pairs...
+    
+    # Add new pairs below:
+    (r"what is your name|who are you", 
+     ["I'm your friendly chatbot assistant!", "You can call me ChatBot!"]),
+     
+    (r"how are you|how's it going", 
+     ["I'm doing great, thanks for asking! how may i assist you today",]),
+     
+    (r"thank you|thanks", 
+     [ "Happy to help!"]),
+     
+    (r"bye|goodbye|see you", 
+     ["Goodbye! Have a nice day!"]),
+     
+    (r"help|support", 
+     [" What do you need?",]),
+     
+    (r"(.*)(buy|purchase)(.*)", 
+     ["Would you like to purchase one item or more than one"]),
+     
+    (r"one", 
+     ["Click The purchase button on Getproduct,Enter you Phone Number,Receive an Mpesa Message,then enter Mpesa pin to complete Payment "]),
+
+      (r"More than one", 
+     [" select the prodect by clicking The Cart button on Getproduct once clicked,click the cart icon on the Navbar,click procced to cheakout ,Enter you phone number,Receive an Mpesa Message,then enter Mpesa pin to complete Payment "]),
+
+      (r"(.*)(human|customercare)(.*)", 
+     ["Contact your front desk manager on 0792827049"]),
+     
+    (r"()", 
+     [
+      "I'm still learning. Could you ask me something else?"])
 ]
 
 chatbot = Chat(pairs, reflections)
