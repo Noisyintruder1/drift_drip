@@ -68,7 +68,7 @@ const Navbar = () => {
             
             <li className="nav-item px-2">
               <Link to="/ChatComponent" className="nav-link">
-                Customer Support
+                <img className='chat' src="/asets/image/chatbot.png" alt="" />
                 <div className="nav-underline"></div>
               </Link>
             </li>
