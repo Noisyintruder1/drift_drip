@@ -6,7 +6,7 @@ import Home from './components/Home';
 import Signup from './components/Signup';
 import Login from './components/Login';
 import GetProducts from './components/Getproducts';
-import MakePayments from './components/Makepayment'
+import MakePayments from './components/Makepayment';
 import UploadProduct from './components/UploadProduct';
 import Cart from './components/Cart';
 import { useState, useEffect } from 'react';
@@ -16,8 +16,8 @@ import CartCheckout from './components/cartCheckout';
 import { AuthProvider } from './components/contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import ChatComponent from './components/bot/ChatComponent';
-
-
+import AuthWrapper from './components/AuthWrapper';
+import PaymentSuccess from './components/PaymentSuccess';
 
 function App() {
   const [cartItems, setCartItems] = useState(() => {
@@ -64,7 +64,16 @@ function App() {
               <Route path='/' element={<Home />} />
               <Route path='/Signup' element={<Signup />} />
               <Route path='/Login' element={<Login />} />
-              <Route path='/UploadProduct' element={<UploadProduct />} />
+              <Route path='/PaymentSuccess' element={<PaymentSuccess/>} />
+
+              <Route 
+                path='/UploadProduct' 
+                element={
+                  <AuthWrapper>
+                    <UploadProduct />
+                  </AuthWrapper>
+                } 
+              />
               <Route path='/ChatComponent' element={<ChatComponent/>}/>
               <Route 
                 path='/Getproducts' 
@@ -89,7 +98,6 @@ function App() {
                   </ProtectedRoute>
                 } 
               />
-
               <Route 
                 path='/cartcheckout' 
                 element={
@@ -98,8 +106,8 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              
             </Routes>
+            
             <hr />
           </div>
         </Router>

@@ -36,15 +36,28 @@ const CartCheckout = () => {
         'https://Noisyintruder2.pythonanywhere.com/api/mpesa_payment', 
         data
       );
+      
       setMessage(response.data.message);
       
+      // Navigate to PaymentSuccess after successful payment initiation
+      navigate('/PaymentSuccess', {
+        state: {
+          paymentDetails: {
+            transactionId: response.data.transaction_id || 'N/A',
+            phoneNumber: phone
+          },
+          cartItems: cartItems,
+          totalAmount: totalCost
+        }
+      });
+      
       // Clear cart on successful payment
-      if (response.data.success) {
-        localStorage.removeItem("cart");
-        window.dispatchEvent(new Event("cartUpdated"));
-      }
+      localStorage.removeItem("cart");
+      window.dispatchEvent(new Event("cartUpdated"));
+      
     } catch (error) {
       setMessage("Payment failed. Please try again.");
+      console.error("Payment error:", error);
     }
   }
 
@@ -71,7 +84,11 @@ const CartCheckout = () => {
                   />
                   <div className="flex-grow-1">
                     <h5 className="mb-1">{item.product_name}</h5>
-                    <p className="text-warning mb-0">{item.product_cost} Ksh</p>
+                    <div className="d-flex justify-content-between">
+                      <p className="text-warning mb-0">KSh {item.product_cost}</p>
+                      <p className="text-light mb-0">Qty: {item.quantity}</p>
+                    </div>
+                    {item.size && <p className="text-light mb-0">Size: {item.size}</p>}
                   </div>
                 </div>
               ))}
@@ -79,7 +96,7 @@ const CartCheckout = () => {
 
             <div className="d-flex justify-content-between mb-4 p-3 bg-dark rounded">
               <h5 className="text-light mb-0">Total Amount:</h5>
-              <h5 className="text-warning mb-0">{totalCost.toFixed(2)} Ksh</h5>
+              <h5 className="text-warning mb-0">KSh {totalCost.toFixed(2)}</h5>
             </div>
 
             <div className="mt-4">

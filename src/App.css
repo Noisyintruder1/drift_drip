@@ -154,3 +154,8 @@ font-style: italic;
 .Edit{
   background: linear-gradient(to right, #000000c7, #ecb3b3,#000000)
 }
+.authwrapper{
+  margin: 80px;
+  font-style: italic;
+  background-color: #99b4d4f8;
+}

@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "bootstrap/dist/js/bootstrap.js";
-
 const MakePayments = () => {
   const location = useLocation();
   const { product, cartItems, totalCost } = location.state || {};
