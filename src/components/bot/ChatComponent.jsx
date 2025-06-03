@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import './ChatComponent.css';
-import "bootstrap/dist/js/bootstrap.js"
-import 'bootstrap/dist/css/bootstrap.min.css'
-
-
+import "bootstrap/dist/js/bootstrap.js";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const ChatComponent = () => {
   const [messages, setMessages] = useState([]);
@@ -12,12 +9,111 @@ const ChatComponent = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [robotActive, setRobotActive] = useState(false);
 
+  // Chatbot response configuration
+  const chatbotConfig = {
+    pairs: [
+      {
+        pattern: /hi|hello|hey/i,
+        responses: ["Hello! How can I assist you today?", "Hi there! How can I help?"]
+      },
+      {
+        pattern: /what is your name|who are you/i,
+        responses: ["I'm your friendly chatbot assistant!", "You can call me ChatBot!"]
+      },
+      {
+        pattern: /how are you|how's it going/i,
+        responses: ["I'm doing great, thanks for asking! How may I assist you today?"]
+      },
+      {
+        pattern: /thank you|thanks/i,
+        responses: ["Happy to help!"]
+      },
+      {
+        pattern: /bye|goodbye|see you/i,
+        responses: ["Goodbye! Have a nice day!"]
+      },
+      {
+        pattern: /help|support/i,
+        responses: ["What do you need?"]
+      },
+      {
+        pattern: /(.*)(buy|purchase)(.*)/i,
+        responses: ["Would you like to purchase one item or more than one?"],
+        suggestions: ["one", "more than one"]
+      },
+      {
+        pattern: /one/i,
+        responses: ["Select the product by clicking the cart button on Getproduct, then click the cart icon on the navbar, proceed to checkout, enter your phone number, receive an Mpesa message, then enter your Mpesa pin to complete payment."]
+      },
+      {
+        pattern: /more than one/i,
+        responses: ["Select the product by clicking the cart button on Getproduct, then click the cart icon on the navbar, proceed to checkout, enter your phone number, receive an Mpesa message, then enter your Mpesa pin to complete payment."]
+      },
+      {
+        pattern: /(.*)(human|customercare)(.*)/i,
+        responses: ["Contact your front desk manager on 0792827049"]
+      },
+      {
+        pattern: /(.*)/i, // Default catch-all
+        responses: ["I'm still learning. Could you ask me something else?"]
+      }
+    ],
+    reflections: {
+      "i am": "you are",
+      "i was": "you were",
+      "i": "you",
+      "i'm": "you are",
+      "i'd": "you would",
+      "i've": "you have",
+      "i'll": "you will",
+      "my": "your",
+      "you are": "I am",
+      "you were": "I was",
+      "you've": "I have",
+      "you'll": "I will",
+      "your": "my",
+      "yours": "mine",
+      "you": "me",
+      "me": "you"
+    }
+  };
+
   useEffect(() => {
-    // Robot "wakes up" when first message is sent
     if (messages.length > 0 && !robotActive) {
       setRobotActive(true);
     }
   }, [messages, robotActive]);
+
+  const getBotResponse = (userInput) => {
+    const input = userInput.toLowerCase().trim();
+    
+    // Check for quit commands
+    if (input === 'quit' || input === 'bye' || input === 'goodbye') {
+      return {
+        message: "Goodbye! Have a nice day.",
+        suggestions: [],
+        status: 'end'
+      };
+    }
+
+    // Find matching pattern
+    for (const pair of chatbotConfig.pairs) {
+      if (pair.pattern.test(input)) {
+        return {
+          message: pair.responses[Math.floor(Math.random() * pair.responses.length)],
+          suggestions: pair.suggestions || [],
+          status: 'success'
+        };
+      }
+    }
+
+    // Default response
+    return {
+      message: chatbotConfig.pairs[chatbotConfig.pairs.length - 1].responses[0],
+      suggestions: [],
+      status: 'success'
+    };
+  };
 
   const handleSendMessage = async () => {
     if (!input.trim()) return;
@@ -29,24 +125,30 @@ const ChatComponent = () => {
     setIsTyping(true);
     
     try {
-      // Simulate thinking delay for better UX
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Simulate thinking delay
+      await new Promise(resolve => setTimeout(resolve, 800));
       
-      const response = await axios.post('http://localhost:5000/api/chat', {
-        message: input
-      });
+      const response = getBotResponse(input);
       
       const botMessage = { 
-        text: response.data.message, 
+        text: response.message, 
         sender: 'bot',
-        suggestions: response.data.suggestions || []
+        suggestions: response.suggestions || []
       };
       
       setMessages(prev => [...prev, botMessage]);
+      
+      if (response.status === 'end') {
+        // Reset chat after goodbye
+        setTimeout(() => {
+          setMessages([]);
+          setRobotActive(false);
+        }, 2000);
+      }
     } catch (error) {
-      console.error('Error communicating with chatbot:', error);
+      console.error('Error:', error);
       setMessages(prev => [...prev, { 
-        text: "Sorry, I'm having trouble connecting to the chatbot.", 
+        text: "Sorry, something went wrong.", 
         sender: 'bot',
         suggestions: []
       }]);
@@ -57,7 +159,10 @@ const ChatComponent = () => {
 
   const handleSuggestionClick = (suggestion) => {
     setInput(suggestion);
-    handleSendMessage();
+    // Use setTimeout to ensure the input is updated before sending
+    setTimeout(() => {
+      handleSendMessage();
+    }, 0);
   };
 
   // Loading dots animation component
@@ -70,11 +175,8 @@ const ChatComponent = () => {
   );
 
   return (
-    
     <div className="chat-app">
-      
       {/* Robot Head */}
-      
       <div className={`robot-head ${robotActive ? 'active' : ''}`}>
         <div className="robot-face">
           <div className="eyes">
@@ -87,16 +189,16 @@ const ChatComponent = () => {
       </div>
 
       <div className="chat-container">
-        <h3 className='leo'>Welcome to Drift,Trip& Drip Collection customer Care</h3>
+        <h3 className='leo'>Welcome to Drift, Trip & Drip Collection Customer Care</h3>
         <div className="chat-messages">
           {messages.length === 0 && (
             <div className="welcome-message">
               <h3>Hello! I'm your friendly AI assistant</h3>
               <p>Ask me anything or try one of these:</p>
               <div className="welcome-suggestions">
-                <button onClick={() => handleSuggestionClick("hi")}>hi</button>
-                <button onClick={() => handleSuggestionClick("how are you")}>how are you</button>
-                <button onClick={() => handleSuggestionClick("what is your name")}>what is your name</button>
+                <button onClick={() => handleSuggestionClick("hi")}>Say Hello</button>
+                <button onClick={() => handleSuggestionClick("how are you")}>Check In</button>
+                <button onClick={() => handleSuggestionClick("how to buy")}>Purchase Help</button>
               </div>
             </div>
           )}

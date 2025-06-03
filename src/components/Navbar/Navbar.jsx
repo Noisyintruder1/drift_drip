@@ -72,12 +72,7 @@ const Navbar = () => {
                 <div className="nav-underline"></div>
               </Link>
             </li>
-            <li className="nav-item px-2">
-              <Link to="/UploadProduct" className="nav-link">
-                Upload
-                <div className="nav-underline"></div>
-              </Link>
-            </li>
+           
 
             <li className="nav-item px-2">
               <Link to="/cart" className="nav-link position-relative">

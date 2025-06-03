@@ -25,7 +25,7 @@ const Signup = () => {
       data.append("password",password);
       data.append("phone", phone);
       
-      const response = await axios.post("https://noisyintruder2.pythonanywhere.com/api/signup", data);
+      const response = await axios.post("https://Noisyintruder2.pythonanywhere.com/api/signup", data);
 
       setLoading("");
       setSuccess(response.data.success);

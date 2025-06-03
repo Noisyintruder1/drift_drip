@@ -5,7 +5,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 
 const PaymentSuccess = () => {
   const { state } = useLocation();
-  const { paymentDetails, cartItems = [], totalAmount = 0 } = state || {};
+  const { paymentDetails, cartItems = [], totalAmount = 0, username } = state || {};
   const navigate = useNavigate();
   const img_url = 'https://Noisyintruder2.pythonanywhere.com/static/images/';
 
@@ -31,6 +31,12 @@ const PaymentSuccess = () => {
               {paymentDetails && (
                 <div className="mb-4 p-3 bg-light rounded text-start">
                   <h5>Payment Details</h5>
+                  {username && (
+                    <div className="d-flex justify-content-between">
+                      <span>Customer:</span>
+                      <span className="fw-bold">{username}</span>
+                    </div>
+                  )}
                   <div className="d-flex justify-content-between">
                     <span>Transaction ID:</span>
                     <span className="fw-bold">{paymentDetails.transactionId || 'N/A'}</span>
@@ -50,13 +56,13 @@ const PaymentSuccess = () => {
                 </div>
               )}
 
+              {/* Rest of the component remains the same */}
               {cartItems.length > 0 && (
                 <div className="mb-4 p-3 bg-light rounded">
                   <h5>Order Summary</h5>
                   {cartItems.map((item, index) => (
                     <div key={index} className="mb-3 pb-2 border-bottom">
                       <div className="d-flex align-items-center">
-                        {/* Product Image - matches MakePayments.jsx style */}
                         <div className="me-3" style={{ width: '80px', height: '80px' }}>
                           <img 
                             src={item.product_photo ? img_url + item.product_photo : 'https://via.placeholder.com/80'} 
@@ -69,14 +75,18 @@ const PaymentSuccess = () => {
                             }}
                           />
                         </div>
-                        {/* Product Details */}
                         <div className="flex-grow-1">
                           <div className="d-flex justify-content-between">
                             <span className="fw-bold">{item.product_name}</span>
                             <span>KSh {item.product_cost * item.quantity}</span>
                           </div>
                           <div className="d-flex justify-content-between text-muted">
-                            <span>Quantity: {item.quantity}</span>
+                            <div>
+                              <span>Quantity: {item.quantity}</span>
+                              {item.size && (
+                                <span className="ms-2">Size: {item.size}</span>
+                              )}
+                            </div>
                             <span>KSh {item.product_cost} each</span>
                           </div>
                         </div>
@@ -91,6 +101,8 @@ const PaymentSuccess = () => {
               )}
 
               <div className="d-grid gap-2">
+                <p className='print'>Please print the recipt for future use</p>
+                <a href="https://wa.me/254792827049" className='app'>Send the recipt on our  WhatsApp</a>
                 <button 
                   className="btn btn-success"
                   onClick={() => navigate('/')}
@@ -98,7 +110,7 @@ const PaymentSuccess = () => {
                   <i className="bi bi-house-door me-2"></i>Back to Home
                 </button>
                 <button 
-                  className="btn btn-outline-secondary"
+                  className="btn btn-outline-primary"
                   onClick={() => window.print()}
                 >
                   <i className="bi bi-printer me-2"></i>Print Receipt

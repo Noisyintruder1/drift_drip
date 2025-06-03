@@ -17,11 +17,13 @@ const GetProducts = () => {
   const [error, setError] = useState(null);
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const [quantities, setQuantities] = useState({});
   const [selectedSizes, setSelectedSizes] = useState({});
   const { addToCart } = useCart();
 
   const img_url = "https://Noisyintruder2.pythonanywhere.com/static/images/";
+
+  // Generate shoe sizes from 32 to 46
+  const shoeSizes = Array.from({ length: 15 }, (_, i) => i + 32);
 
   const getProducts = async () => {
     try {
@@ -30,15 +32,12 @@ const GetProducts = () => {
         "https://Noisyintruder2.pythonanywhere.com/api/get_products"
       );
       setProducts(response.data);
-      // Initialize quantities and sizes
-      const initialQuantities = {};
+      // Initialize sizes
       const initialSizes = {};
       response.data.forEach(product => {
-        initialQuantities[product.product_id] = 1;
         // Default to size 38 if it's a shoe product
-        initialSizes[product.product_id] = product.category === 'shoes' ? 38 : null;
+        initialSizes[product.product_id] = product = 'shoes' ? 38 : null;
       });
-      setQuantities(initialQuantities);
       setSelectedSizes(initialSizes);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -55,7 +54,7 @@ const GetProducts = () => {
   const handleSizeChange = (productId, size) => {
     setSelectedSizes(prev => ({
       ...prev,
-      [productId]: size
+      [productId]: parseInt(size)
     }));
   };
 
@@ -66,13 +65,11 @@ const GetProducts = () => {
       return;
     }
 
-    if (!product.product_id) {
-      console.error("Product is missing ID:", product);
-      toast.error("Product error - please try again");
+    if (product=== 'shoes' && !selectedSizes[product.product_id]) {
+      toast.error("Please select a size before adding to cart");
       return;
     }
 
-    const quantity = quantities[product.product_id] || 1;
     const size = selectedSizes[product.product_id];
 
     const cartItem = {
@@ -81,22 +78,17 @@ const GetProducts = () => {
       product_description: product.product_description,
       product_cost: product.product_cost,
       product_photo: product.product_photo,
-      quantity: quantity,
-      ...(product.category === 'shoes' && { size: size }) // Only include size if it's a shoe
+      quantity: 1,
+      ...(product.category === 'shoes' && { size: size })
     };
 
     addToCart(cartItem);
-    toast.success(`${product.product_name} (${quantity}x${size ? `, size ${size}` : ''}) added to cart!`);
-  };
-
-  const handlePurchase = (product) => {
-    if (!isAuthenticated) {
-      toast.info("Please login to make a purchase");
-      navigate('/Login');
-      return;
-    }
-    const size = selectedSizes[product.product_id];
-    navigate("/MakePayments", { state: { product, size } });
+    toast.success(
+      <div>
+        <strong>{product.product_name}</strong> added to cart
+        {size && <div>Size: {size}</div>}
+      </div>
+    );
   };
 
   const filteredProducts = products.filter((product) =>
@@ -128,6 +120,13 @@ const GetProducts = () => {
     <div className="container-fluid" style={{ backgroundColor: '#121212', minHeight: '100vh', padding: '20px' }}>
       <div className="d-flex justify-content-between align-items-center mb-4 py-3">
         <h3 style={{ color: '#ffffff' }}>Products Available</h3>
+        <button 
+          type="button" 
+          className="btn btn-secondary py-2"
+          onClick={() => navigate('/Uploadproduct')}
+        >
+          Upload product
+        </button>
         <div style={{ width: "300px" }}>
           <input
             type="text"
@@ -174,39 +173,33 @@ const GetProducts = () => {
                       Ksh {parseFloat(product.product_cost).toFixed(2)}
                     </h5>
                     
+                    {/* Size Selector (dropdown for shoes) */}
                     {product.category === 'shoes' && (
-                      <div className="col-md-4 ">
-                        <label className="form-label text-light justify-content-center"><i>Size</i></label>
-                        <select 
-                          className="form-select bg-outline-primary text-dark"
+                      <div className="mb-3">
+                        <label htmlFor={`size-${product.product_id}`} className="form-label text-light fw-bold">Select Size:</label>
+                        <select
+                          id={`size-${product.product_id}`}
+                          className="form-select bg-secondary text-light border-dark"
                           value={selectedSizes[product.product_id] || 38}
-                          onChange={(e) => handleSizeChange(product.product_id, parseInt(e.target.value))}
+                          onChange={(e) => handleSizeChange(product.product_id, e.target.value)}
                         >
-                          {Array.from({length: 15}, (_, i) => i + 32).map(size => (
+                          {shoeSizes.map(size => (
                             <option key={size} value={size}>{size}</option>
                           ))}
                         </select>
                       </div>
                     )}
                     
-                    <section className="row">
-                      <div className="col-md-6">
-                        <button
-                          className="btn btn-outline-primary mt-2 w-100 fw-semibold"
-                          onClick={() => handleAddToCart(product)}
-                        >
-                          <i className="bi bi-cart-plus me-2"></i> Cart 📦
-                        </button>
-                      </div>
-                      <div className="col-md-6">
-                        <button
-                          className="btn btn-outline-success mt-2 w-100 fw-semibold"
-                          onClick={() => handlePurchase(product)}
-                        >
-                          Purchase💰
-                        </button>
-                      </div>
-                    </section>
+                    {/* Centered Add to Cart Button */}
+                    <div className="d-flex justify-content-center mt-3">
+                      <button
+                        className="btn btn-outline-success fw-semibold"
+                        style={{ width: '80%' }}
+                        onClick={() => handleAddToCart(product)}
+                      >
+                        <i className="bi bi-cart-plus me-2"></i> Add to cart 
+                      </button>
+                    </div>
                   </div>
                 </Card.Body>
               </Card>

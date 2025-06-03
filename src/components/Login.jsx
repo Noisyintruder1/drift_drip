@@ -156,9 +156,6 @@ const Login = () => {
           <p className='text-center mt-3'>
             Don't have an account? <Link to="/Signup" className="link-primary">Sign up</Link>
           </p>
-          <p className='text-center'>
-            <Link to="/forgot-password" className="link-secondary">Forgot password?</Link>
-          </p>
         </form>
       </div>
     </div>

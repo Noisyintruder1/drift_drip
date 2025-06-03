@@ -19,6 +19,7 @@ import ChatComponent from './components/bot/ChatComponent';
 import AuthWrapper from './components/AuthWrapper';
 import PaymentSuccess from './components/PaymentSuccess';
 
+
 function App() {
   const [cartItems, setCartItems] = useState(() => {
     const saved = localStorage.getItem('cart');
@@ -65,6 +66,7 @@ function App() {
               <Route path='/Signup' element={<Signup />} />
               <Route path='/Login' element={<Login />} />
               <Route path='/PaymentSuccess' element={<PaymentSuccess/>} />
+              
 
               <Route 
                 path='/UploadProduct' 

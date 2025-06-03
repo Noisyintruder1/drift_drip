@@ -1,6 +1,6 @@
 .App {
   text-align: center;
-  background: linear-gradient(to right, #da9696c7, #808fc0,#335517);
+  background: linear-gradient(to right, #000000c7, #09b38e,#aa574d);
 }
 
 .App-header {
@@ -158,4 +158,13 @@ font-style: italic;
   margin: 80px;
   font-style: italic;
   background-color: #99b4d4f8;
+}
+.print{
+color: #dd6d05;
+font-size: 20px;
+font-style: italic;
+}
+.app{
+  color: #003d61;
+  font-size: 15px;
 }
